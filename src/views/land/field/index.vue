@@ -2,14 +2,14 @@
   <div class="app-container land_farm">
     <el-card class="filter-container" shadow="never">
       <el-form :inline="true" :model="searchFormData" size="small" label-width="100px" class="demo-form-inline">
-        <el-form-item label="农场名称">
-          <el-input></el-input>
+        <el-form-item label="田地名称">
+          <el-input v-model="searchFormData.fieldName"></el-input>
         </el-form-item>
         <el-form-item label="地块名称">
-          <el-input></el-input>
+          <el-input v-model="searchFormData.blockName"></el-input>
         </el-form-item>
         <el-form-item label="农场名称">
-          <el-input></el-input>
+          <el-input v-model="searchFormData.farmName"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="queryData">搜索</el-button>

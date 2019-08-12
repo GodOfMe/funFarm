@@ -8,7 +8,7 @@
         <el-form-item label="状态">
           <el-select v-model="searchFormData.status">
             <el-option label="全部" value=""></el-option>
-            <el-option v-for="item,i in statusList" :key="i" :label="item.key" :value="item.value"></el-option>
+            <el-option v-for="item,i in statusList" :key="i" :label="item.key" :value="item.val"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
