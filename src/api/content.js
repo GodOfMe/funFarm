@@ -14,7 +14,7 @@ export function articleCategoryUpdate(params) {
 }
 // 文章分类删除
 export function articleCategoryDelete(params) {
-  return POST('/articleCategory/delete?id=' + params.id,params)
+  return GET('/articleCategory/delete/' + params.id)
 }
 // 文章列表查询
 export function articleList(params) {
@@ -26,7 +26,7 @@ export function articleCreate(params) {
 }
 // 文章编辑
 export function articleUpdate(params) {
-  return POST('/article/update?id=' + params.id,params)
+  return POST('/article/update',params)
 }
 
 // 意见反馈列表
@@ -66,11 +66,45 @@ export function withdrawApplyPage(params) {
 
 // 预约管理 列表
 export function withdraApplyPage(params) {
-  return POST('/withdrawApply/page',params)
+  return POST('/appointment/page',params)
 }
 
+//通过预约
+export function appointmentApprove(params) {
+  return GET('/appointment/approve/'+params.id)
+}
+
+//取消预约
+export function appointmentCancel(params) {
+  return GET('/appointment/cancel/'+params.id)
+}
 
 // 收支明细
 export function balancePage(params) {
   return POST('/balance/page',params)
 }
+
+//标记未打款
+export function notTransfered(params) {
+  return POST('/withdrawApply/note/notTransfered',params)
+}
+
+//标记已打款
+export function transfered(params) {
+  return POST('/withdrawApply/note/transfered',params)
+}
+
+//审核通过
+export function pass(params) {
+  return POST('/withdrawApply/verify/pass',params)
+}
+
+//审核未通过
+export function reject(params) {
+  return POST('/withdrawApply/note/reject',params)
+}
+
+//
+// export function notTransfered(params) {
+//   return POST('/withdrawApply/note/notTransfered',params)
+// }

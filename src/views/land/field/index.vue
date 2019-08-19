@@ -81,7 +81,7 @@
           align="center"
           label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click.native="openDia(scope.row)">修改</el-button>
+            <el-button type="text" @click.native="openDia(scope.row)">详情</el-button>
             <el-button type="text" @click.native="removeItem(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -220,20 +220,26 @@
             },
             
             openDia (item) {
-                this.resetDialogForm()
-                if (item) {
-                    this.dialogForm = {
-                        blockName: item.blockName,
-                        farmId: item.farmId,
-                        area: item.area,
-                        id: item.id
-                    }
-                    this.diaParam.farmName = item.farmName
-                    this.diaParam.title = '修改'
-                } else {
-                    this.diaParam.title = '添加'
-                }
-                this.toggleDia(true)
+                // this.resetDialogForm()
+                // if (item) {
+                //     this.dialogForm = {
+                //         blockName: item.blockName,
+                //         farmId: item.farmId,
+                //         area: item.area,
+                //         id: item.id
+                //     }
+                //     this.diaParam.farmName = item.farmName
+                //     this.diaParam.title = '修改'
+                // } else {
+                //     this.diaParam.title = '添加'
+                // }
+                // this.toggleDia(true)
+              if (item) {
+                var params = JSON.stringify(item)
+                this.$router.push({path: 'fieldDetail', query: {params: params}})
+              } else {
+                this.$router.push({path: 'createPlan'})
+              }
             },
             // 弹框
             toggleDia (boolean) {

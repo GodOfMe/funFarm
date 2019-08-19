@@ -14,7 +14,7 @@ export function farmUpdate(params) {
 }
 // 删除农场列表数据
 export function farmDelete(params) {
-  return GET('/farm/delete',params)
+  return GET('/farm/delete/'+params.id)
 }
 // 添加管理员
 export function farmAddAdmin(params) {
@@ -34,11 +34,11 @@ export function farmBlockCreate(params) {
 }
 // 修改地块
 export function farmBlockUpdate(params) {
-  return POST('/farmBlock/update?id='+params.id,params)
+  return POST('/farmBlock/update',params)
 }
 // 删除地块
 export function farmBlockDelete(params) {
-  return GET('/farmBlock/delete',params)
+  return GET('/farmBlock/delete/'+params.id)
 }
 
 // 田地列表

@@ -34,7 +34,7 @@
           label="反馈内容">
         </el-table-column>
         <el-table-column
-          prop="farmName"
+          prop="reportPics"
           align="center"
           label="反馈图片">
         </el-table-column>

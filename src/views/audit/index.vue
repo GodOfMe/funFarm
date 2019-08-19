@@ -23,42 +23,45 @@
     <div class="table-container">
       <el-table :data="tableData" border style="width: 100%" stripe>
         <el-table-column
-          prop="name"
+          prop="memberUsername"
           align="center"
           label="用户">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="memberPhone"
           align="center"
           label="手机号">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="applyTime"
           align="center"
           label="审核时间">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="transferTime"
           align="center"
           label="打款时间">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="withdrawAmount"
           align="center"
           label="提现金额">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="alipayPhone"
           align="center"
           label="提现支付宝">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop=""
           align="center"
           label="状态">
+          <template slot-scope="scope">
+            {{statusList[scope.row.status || 0]}}
+          </template>
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="note"
           align="center"
           label="备注">
         </el-table-column>
@@ -66,6 +69,10 @@
           align="center"
           label="操作">
           <template slot-scope="scope">
+            <el-button type="text" v-if="scope.row.status === 0" @click="shenHe(scope.row.id)">审核</el-button>
+            <el-button v-if="scope.row.status === 1" type="text" @click="daKuan(scope.row.id)">打款</el-button>
+            <el-button v-if="scope.row.status === 1" type="text" @click="quXiao(scope.row.id)">取消</el-button>
+            <span v-if="scope.row.status === 2 || scope.row.status === 3"></span>
           </template>
         </el-table-column>
       </el-table>
@@ -132,12 +139,7 @@
                     adminPhone: '',
                     farmId: ''
                 },
-                statusList: [
-                    {key: '待审核', val: 0},
-                    {key: '通过', val: 1},
-                    {key: '未通过', val: 2},
-                    {key: '已打款', val: 3}
-                ]
+                statusList: ['待审核','通过', '未通过','已打款']
             }
         },
         created () {
@@ -155,6 +157,7 @@
                         params[key] = this.searchFormData[key]
                     }
                 })
+              console.log(params);
                 this.$api.content.withdrawApplyPage(params).then(res => {
                     if (res.success) {
                         this.tableData = res.data.list
@@ -238,6 +241,70 @@
                     })
                 })
             },
+          shenHe(id){
+            this.$confirm('是否通过审核', '审核', {
+              confirmButtonText: '通过',
+              cancelButtonText: '未通过',
+              type: 'warning'
+            })
+              .then(() => {
+                this.$api.content.pass({id:id}).then(res => {
+                  if (res.success) {
+                    this.$message({
+                      type: 'info',
+                      message: '审核通过'
+                    })
+                  }
+                })
+              })
+              .catch(() => {
+                this.$api.content.reject({id:id}).then(res => {
+                  if (res.success) {
+                    this.$message({
+                      type: 'info',
+                      message: '审核未通过'
+                    })
+                  }
+                })
+              })
+          },
+          quXiao(id){
+            this.$api.content.withdrawApplyPage({id:id}).then(res => {
+              if (res.success) {
+                this.$message({
+                  type: 'info',
+                  message: '已取消'
+                })
+              }
+            })
+          },
+          daKuan(id){
+            this.$confirm('是否已打款', '打款', {
+              confirmButtonText: '已打款',
+              cancelButtonText: '还未打款',
+              type: 'warning'
+            })
+              .then(() => {
+                this.$api.content.transfered({id:id}).then(res => {
+                  if (res.success) {
+                    this.$message({
+                      type: 'info',
+                      message: '已打款'
+                    })
+                  }
+                })
+              })
+              .catch(() => {
+                this.$api.content.notTransfered({id:id}).then(res => {
+                  if (res.success) {
+                    this.$message({
+                      type: 'info',
+                      message: '还未打款'
+                    })
+                  }
+                })
+              })
+          },
             // 删除接口
             prductCategoryDelete (id) {
                 this.$api.dishe.prductCategoryDelete({id: id}).then(res => {

@@ -22,9 +22,9 @@
         </div>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+        <el-form :inline="true" :model="searchFormData" size="small" label-width="140px">
           <el-form-item label="方案名称：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="方案名称"></el-input>
+            <el-input style="width: 203px" v-model="searchFormData.name" placeholder="方案名称"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -46,23 +46,25 @@
         <el-table-column label="方案名称" align="center" prop="name"></el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
-            {{ scope.row.whenCreated | timeFormat}}
+            {{ scope.row.createTime | timeFormat}}
           </template>
         </el-table-column>
         <el-table-column label="是否发布" align="center">
           <template slot-scope="scope">
+            <span v-if="scope.row.pushedStatus === 1">已发布</span><span v-else>未发布</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建人"></el-table-column>
+        <el-table-column label="创建人" align="center" prop="createBy"></el-table-column>
         <el-table-column label="备注" align="center" prop="description"></el-table-column>
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleUpdate(scope.row)">修改
+              @click="handleAdd(scope.row)">修改
             </el-button>
             <!-- 发布 or 取消发布 -->
             <el-button
+              :disabled="scope.row.pushedStatus === 1"
               size="mini"
               @click="handleRelease(scope.row)">发布
             </el-button>
@@ -76,17 +78,25 @@
         background
         layout="total, prev, pager, next,jumper"
         :page-count="totalPageCount"
-        :page-size="listQuery.pageSize"
+        :page-size="searchFormData.pageSize"
         @current-change="handleCurrentChange"
-        :current-page.sync="listQuery.pageNum">
+        :current-page.sync="searchFormData.pageNnum" v-show="totalPageCount > searchFormData.pageSize">
       </el-pagination>
+      <!--<el-pagination-->
+        <!--background-->
+        <!--layout="total, prev, pager, next"-->
+        <!--:total="totalCount"-->
+        <!--:page-size="searchFormData.pageSize"-->
+        <!--@current-change="queryData"-->
+        <!--:current-page="searchFormData.pageNnum" v-show="totalCount > searchFormData.pageSize">-->
+      <!--</el-pagination>-->
     </div>
 
     <el-dialog
       :title="dialogTitle"
       :visible.sync="dialogVisible"
       class="dialog-form"
-      width="400px">
+      width="800px">
       <el-form :model="dialogForm" ref="dialogForm" :rules="rules" label-width="120px">
         <el-form-item label="菜品分类名称" prop="name">
           <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
@@ -117,6 +127,11 @@ export default {
         description: '',
         whenCreated: 1528944589000
       }],
+      searchFormData: {
+        name:  '',
+        pageNnum: 1,
+        pageSize: 10
+      },
       totalPageCount: 0,
       dialogForm: {},
       rules: {
@@ -131,14 +146,28 @@ export default {
     }
   },
   methods: {
-    handleCurrentChange () {},
-    handleAdd () {
-      this.dialogVisible = true;
-      this.dialogTitle = '添加菜品分类';
-      this.dialogForm = {};
-      this.$nextTick(() => {
-        this.$refs['dialogForm'].clearValidate();
-      });
+    handleCurrentChange () {
+      let params = {}
+      Object.keys(this.searchFormData).forEach(key => {
+        if (this.searchFormData[key] != '') {
+          params[key] = this.searchFormData[key];
+        }
+      })
+      this.$api.dishe.recommendSchemeList(params).then(res=>{
+        if (res.success) {
+          this.list = res.data.list
+          this.totalPageCount = res.data.total
+
+        }
+      })
+    },
+    handleAdd (item) {
+      if (item) {
+        var params = JSON.stringify(item)
+        this.$router.push({path: 'updatePlan', query: {params: params}})
+      } else {
+        this.$router.push({path: 'createPlan'})
+      }
     },
     handleUpdate (row) {
       const { id, name, description } = row;
@@ -153,7 +182,14 @@ export default {
         this.$refs['dialogForm'].clearValidate();
       });
     },
-    handleRelease (row) {},
+    handleRelease (row) {
+      this.$api.dishe.recommendSchemePublish({id:row.id})
+        .then(res=>{
+          if (res.success) {
+            this.handleCurrentChange ()
+          }
+        })
+    },
     handleEditConfirm () {
       if (this.btnDis) return;
         this.btnDis = true;
@@ -165,7 +201,17 @@ export default {
               this.dialogVisible = false;
               this.btnDis = false;
             } else {
-              // 添加
+              let params = {}
+              // Object.keys(this.dialogForm).forEach(key => {
+              //   if (this.searchFormData[key] != '') {
+              //     params[key] = this.searchFormData[key];
+              //   }
+              // })
+              this.$api.dishe.recommendSchemeSave(params).then(res=>{
+                if (res.success) {
+                  this.handleCurrentChange ()
+                }
+              })
 
               this.dialogVisible = false;
               this.btnDis = false;
@@ -177,7 +223,7 @@ export default {
     }
   },
   created () {
-    
+    this.handleCurrentChange ()
   }
 }
 </script>

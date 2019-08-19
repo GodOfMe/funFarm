@@ -38,3 +38,18 @@ export function productUpdate(params) {
 export function productDelete(params) {
   return GET('/product/delete/' + params.id)
 }
+
+// 菜品推荐方案分页列表POST /recommendScheme/save
+export function recommendSchemeList(params) {
+  return POST('/recommendScheme/list',params)
+}
+
+// 添加推荐方案
+export function recommendSchemeSave(params) {
+  return POST('/recommendScheme/save',params)
+}
+
+//发布菜品方案
+export function recommendSchemePublish(params) {
+  return GET('/recommendScheme/publish/'+params.id)
+}

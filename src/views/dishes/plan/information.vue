@@ -1,12 +1,9 @@
 <template>
   <div style="margin-top: 50px" id="editInfo">
     <el-form :model="param" ref="productInfoForm" label-width="10px" style="width: 1000px;padding: 10px">
-      <el-form-item>
-        <label>种植计划：</label>
-        <span>绿色成林 （或自选计划）</span>
-        <label>地名：</label>
-        <span>双溪1-1</span>
-        <el-button>停止种植</el-button>
+      <el-form-item label="" prop="name">
+        <label>推荐方案名称:</label>
+        <el-input v-model="param.name" style="width: 200px"></el-input>
       </el-form-item>
       <el-form-item label="">
         <div class="title">{{param.id?'最大产量500公斤':'最大产量'}};</div>
@@ -21,7 +18,7 @@
           </el-row>
         </div>
       </el-form-item>
-      <el-form-item v-if="false">
+      <el-form-item>
         <div class="grid-content bg-purple">{{month.key}}蔬菜：</div>
         <ul>
           <li v-for="i in 14" :key="i" style="width: 150px" class="vegetablesType">
@@ -32,10 +29,10 @@
           </li>
         </ul>
       </el-form-item>
-      <el-form-item v-if="false">
+      <el-form-item>
         <el-button type="primary" size="medium" @click="createSmall()">生成最小产量</el-button>
       </el-form-item>
-      <el-form-item label="">
+      <el-form-item label="" v-if="isCreate">
         <div class="title">{{param.id?'最小产量500公斤':'最最小产量'}};</div>
         <div class="" style="border: 1px solid #000">
           <el-row v-for="index in 3" :key="index">
@@ -48,77 +45,10 @@
           </el-row>
         </div>
       </el-form-item>
-      <el-form-item>
-        <div>实际种植 截止目前 15公斤：</div>
-        <div class="table-container">
-          <el-table :data="tableData" border style="width: 100%" stripe>
-            <el-table-column
-              prop="farmName"
-              align="center"
-              label="播种时间">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="createTimeStr"
-              label="采摘时间">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="totalArea"
-              label="菜品">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="收获">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="adminsName"
-              label="发货时间">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="运送方式">
-              <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-form-item>
-      <el-form-item>
-        <div>当前田地状态：</div>
-        <div class="table-container">
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column
-              prop="farmName"
-              align="center"
-              label="菜品">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="状态">
-              <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="totalArea"
-              label="预计产量">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="操作">
-              <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-form-item>
       <el-form-item style="text-align: center">
-        <el-button type="primary" size="medium" @click="goBacks()">返回</el-button>
+        <el-button type="primary" size="medium" @click="submitItem()">保存</el-button>
+        <el-button type="primary" size="medium" @click="submitItem()">发布</el-button>
+        <el-button size="medium" @click="goBack">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -140,9 +70,8 @@
         isCreate:false,
         month:{key: '一月', val: 1},
         img_home_order,
-        tableData: [],
         param: {
-          // name: '',
+          name: '',
           nickname: '',
           growthPeriodLowerLimit: '',
           growthPeriodHigherLimit: '',
@@ -156,7 +85,7 @@
           endDate: ''
         },
         searchCateData: {
-          // name: '',
+          name: '',
           pageNnum: 1,
           pageSize: 10
         },
@@ -209,17 +138,17 @@
         console.log(this.value)
         var item = this.value
         this.param = {
-          // name: item.name,
-          // nickname: item.nickname,
-          // growthPeriodLowerLimit: item.growthPeriodLowerLimit,
-          // growthPeriodHigherLimit: item.growthPeriodHigherLimit,
-          // productYields: item.productYields,
-          // description: item.description,
-          // productCategoryId: item.productCategoryId,
-          // productCategoryName: item.productCategoryName,
-          // sowType: item.sowType,
-          // months: item.months,
-          // id: item.id
+          name: item.name,
+          nickname: item.nickname,
+          growthPeriodLowerLimit: item.growthPeriodLowerLimit,
+          growthPeriodHigherLimit: item.growthPeriodHigherLimit,
+          productYields: item.productYields,
+          description: item.description,
+          productCategoryId: item.productCategoryId,
+          productCategoryName: item.productCategoryName,
+          sowType: item.sowType,
+          months: item.months,
+          id: item.id
         }
         console.log(this.param.sowType)
         switch (this.param.sowType) {
@@ -260,7 +189,7 @@
       // 重置
       resetSearchCateData () {
         this.searchCateData = {
-          // name: '',
+          name: '',
           pageNnum: 1,
           pageSize: 10
         }
@@ -284,9 +213,9 @@
       },
       selCate (id) {
         for (var i = 0; i < this.cateData.tableData.length; i++) {
-          // var item = this.cateData.tableData[i]
+          var item = this.cateData.tableData[i]
           if (item.id == id) {
-            // this.cateData.productCategoryName = item.name
+            this.cateData.productCategoryName = item.name
           }
         }
       },
@@ -296,11 +225,49 @@
       },
       // 取消与提交
       goBack () {
-        console.log(this.$router)
         this.$router.go(-1)
       },
-      goBacks() {
-        this.$router.go(-1)
+      submitItem () {
+        switch (this.param.sowType) {
+          case 0:
+            this.param.startDate = this.curYear + '-01-01'
+            this.param.endDate = this.curYear + '-12-31'
+            break
+          case 1:
+            this.param.months = this.monthsSelected[0]
+            break
+          case 2:
+            this.param.startDate = this.dateRange[0]
+            this.param.endDate = this.dateRange[1]
+            break
+          case 3:
+            this.param.months = this.monthsSelected.join(',')
+            break
+        }
+        var params = {}
+        Object.keys(this.param).forEach(key => {
+          if (this.param[key] != '' && this.param[key] != false || this.param[key] == 0) {
+            params[key] = this.param[key]
+          }
+        })
+        params.ifBatchesPick = 0
+        console.log(params)
+        if (params.id) { // 修改
+          this.$api.dishe.productUpdate(params).then(res => {
+            this.$globalFun.res(res)
+            if (res.success) {
+              this.goBack()
+            }
+          })
+        } else {
+          this.$api.dishe.productCreate(params).then(res => {
+            this.$globalFun.res(res)
+            if (res.success) {
+              this.goBack()
+            }
+          })
+        }
+
       },
       getMonthPlan(index){
         console.log(index,'9877')
@@ -400,8 +367,5 @@
   li img {
     width: 50px;
     height: 50px;
-  }
-  .el-table th {
-    background: #f5f7fa;
   }
 </style>

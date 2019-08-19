@@ -17,56 +17,65 @@
     <div class="table-container">
       <el-table :data="tableData" border style="width: 100%" stripe>
         <el-table-column
-          prop="blockName"
+          prop="appointPhone"
           align="center"
           label="预约电话">
         </el-table-column>
         <el-table-column
-          prop="farmName"
+          prop="appointTime"
           align="center"
           label="预约时间">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop=""
           label="预约类别">
+          <template slot-scope="scope">
+            <span v-if="scope.row.appointType === 0">采摘</span><span v-else>种地</span>
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop=""
           label="是否就餐">
+          <template slot-scope="scope">
+            <span v-if="scope.row.ifHaveMeal === 0">否</span><span v-else>是</span>
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="mealGuestsCount"
           label="就餐人数">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="fieldName"
           label="地块">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop=""
           label="状态">
+          <template slot-scope="scope">
+            {{status[scope.row.status || 0]}}
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="memberNote"
           label="用户备注">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="adminNote"
           label="管理员备注">
         </el-table-column>
         <el-table-column
           align="center"
           label="操作">
           <template slot-scope="scope">
-            <el-button type="text">通过</el-button>
-            <el-button type="text">取消</el-button>
+            <el-button type="text" @click="approved(scope.row.id)">通过</el-button>
+            <el-button type="text" @click="cancel(scope.row.id)">取消</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -159,7 +168,8 @@
                     farmId: '',
                     area: ''
                 },
-                tableData: []
+                tableData: [],
+                status:['待审核','预约成功','管理员取消','用户取消 ']
             }
         },
         created () {
@@ -185,6 +195,23 @@
                         this.tableData = []
                         this.totalCount = 0
                     }
+                })
+            },
+            //通过审核
+            approved(id){
+              this.$api.content.appointmentApprove({id:id})
+                .then(res => {
+                  if (res.success) {
+                    this.getDataList()
+                  }
+                })
+            },
+            cancel(id){
+              this.$api.content.appointmentCancel({id:id})
+                .then(res => {
+                  if (res.success) {
+                    this.getDataList()
+                  }
                 })
             },
             // 获取数据

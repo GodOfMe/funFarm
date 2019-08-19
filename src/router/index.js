@@ -78,8 +78,23 @@ export const constantRouterMap = [
       path: 'plan',
       name: 'plan',
       component: () => import('@/views/dishes/plan/index'),
-      meta: {title: '种菜方案管理', icon: 'product-list'}
-    },]
+      meta: {title: '种菜方案管理', icon: 'product-list'},
+    },
+    {
+      path: 'createPlan',
+      name: 'createPlan',
+      component: () => import('@/views/dishes/plan/create'),
+      meta: {title: '创建种菜推荐方案', icon: 'product-add'},
+      hidden: true
+    },
+    {
+      path: 'updatePlan',
+      name: 'updatePlan',
+      component: () => import('@/views/dishes/plan/create'),
+      meta: {title: '修改种菜推荐方案', icon: 'product-add'},
+      hidden: true
+    }
+  ]
   },
   {
     path: '/land',
@@ -106,10 +121,10 @@ export const constantRouterMap = [
       meta: {title: '田地管理', icon: 'product-list'}
     },
     {
-      path: 'field-detail',
-      name: 'field-detail',
+      path: 'fieldDetail',
+      name: 'fieldDetail',
       component: () => import('@/views/land/field/detail'),
-      meta: {title: '天地详情', icon: 'product-add'},
+      meta: {title: '田地详情', icon: 'product-add'},
       hidden: true
     },
   ]

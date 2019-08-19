@@ -112,15 +112,15 @@
       // 接口
       // 获取运营数据
       getOperateData() {
-        homeOperationData().then(res=>{
-          console.log('res',res)
-        })
+        // homeOperationData().then(res=>{
+        //   console.log('res',res)
+        // })
       },
       // 待处理数据
       hometodoData(){
-        hometodoData().then(res=>{
-          console.log(res)
-        })
+        // hometodoData().then(res=>{
+        //   console.log(res)
+        // })
       }
     }
   }
