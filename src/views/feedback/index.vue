@@ -24,7 +24,7 @@
           label="反馈电话">
         </el-table-column>
         <el-table-column
-          prop="blockName"
+          prop="createTime"
           align="center"
           label="反馈时间">
         </el-table-column>
@@ -37,6 +37,12 @@
           prop="reportPics"
           align="center"
           label="反馈图片">
+          <template slot-scope="scope">
+            <p v-if="scope.row.reportPics">
+              <img style="width: 50px;height: 50px" v-for="item in scope.row.reportPics.split(',')" :key="item" :src="'http://www.hzqxty.com/'+item" alt="">
+            </p>
+          </template>
+
         </el-table-column>
       </el-table>
     </div>

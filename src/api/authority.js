@@ -14,7 +14,7 @@ export function roleUpdate(params) {
 }
 // 删除角色
 export function roleDelete(params) {
-  return POST('/role/delete?id='+params.id,params)
+  return POST('/role/delete/'+params.id,params)
 }
 
 
@@ -32,5 +32,5 @@ export function adminUpdate(params) {
 }
 // 删除管理员
 export function adminDelete(params) {
-  return POST('/admin/delete/'+params.id  ,params)
+  return GET('/admin/delete/'+params.id)
 }

@@ -32,7 +32,7 @@
       width="600px">
       <el-form :model="dialogForm" ref="dialogForm" label-width="100px">
         <el-form-item label="角色名">
-          <el-select v-model.number="dialogForm.roleId" style="width: 100%" @change="selRole">
+          <el-select v-model.number="dialogForm.roleIds" style="width: 100%" @change="selRole">
             <el-option v-for="item,i in diaParam.roleList" :key="i" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -72,7 +72,7 @@
           roleList: []
         },
         dialogForm: {
-          roleId: '',
+          roleIds: '',
           note: '',
           username: '',
           nickName: '',
@@ -124,7 +124,7 @@
         if (item) {
           this.diaParam.title = '编辑'
           this.dialogForm = {
-            roleId: item.roleId,
+            roleIds: item.roleId,
             note: item.note,
             username: item.username,
             password: item.password,
@@ -180,7 +180,7 @@
       // 重置
       resetDiaForm() {
         this.dialogForm = {
-          roleId: '',
+          roleIds: '',
           note: '',
           username: '',
           nickName: '',

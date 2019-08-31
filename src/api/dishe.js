@@ -10,11 +10,11 @@ export function prductCategoryCreate(params) {
 }
 // 修改菜品分类
 export function prductCategoryUpdate(params) {
-  return POST('/productCategory/update/' + params.id, params)
+  return POST('/productCategory/update', params)
 }
 // 删除菜品分类
 export function prductCategoryDelete(params) {
-  return POST('/productCategory/delete/' + params.id, params)
+  return POST('/productCategory/delete/'+params.id, params)
 }
 
 // 菜品列表 无分页

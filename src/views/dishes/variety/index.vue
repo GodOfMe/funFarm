@@ -8,29 +8,29 @@
         <el-form-item label="菜品别名">
           <el-input v-model="searchFormData.nickname"></el-input>
         </el-form-item>
-        <el-form-item label="分批采摘">
-          <el-select v-model.number="searchFormData.ifBatchesPick">
-            <el-option value="无限制" label=""></el-option>
-            <el-option value="分批" label="1"></el-option>
-            <el-option value="不分批" label="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="开始播种时间">
-          <el-date-picker
-            v-model="searchFormData.sowStartTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束播种时间">
-          <el-date-picker
-            v-model="searchFormData.sowEndTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
+        <!--<el-form-item label="分批采摘">-->
+          <!--<el-select v-model.number="searchFormData.ifBatchesPick">-->
+            <!--<el-option value="无限制" label=""></el-option>-->
+            <!--<el-option value="分批" label="1"></el-option>-->
+            <!--<el-option value="不分批" label="0"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="开始播种时间">-->
+          <!--<el-date-picker-->
+            <!--v-model="searchFormData.sowStartTime"-->
+            <!--type="date"-->
+            <!--value-format="yyyy-MM-dd"-->
+            <!--placeholder="选择日期">-->
+          <!--</el-date-picker>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="结束播种时间">-->
+          <!--<el-date-picker-->
+            <!--v-model="searchFormData.sowEndTime"-->
+            <!--type="date"-->
+            <!--value-format="yyyy-MM-dd"-->
+            <!--placeholder="选择日期">-->
+          <!--</el-date-picker>-->
+        <!--</el-form-item>-->
         <el-form-item label="生长周期下限">
           <el-input v-model="searchFormData.growthPeriodLowerLimit"></el-input>
         </el-form-item>

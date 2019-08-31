@@ -34,19 +34,19 @@
             <span v-if="scope.row.appointType === 0">采摘</span><span v-else>种地</span>
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop=""
-          label="是否就餐">
-          <template slot-scope="scope">
-            <span v-if="scope.row.ifHaveMeal === 0">否</span><span v-else>是</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="mealGuestsCount"
-          label="就餐人数">
-        </el-table-column>
+        <!--<el-table-column-->
+          <!--align="center"-->
+          <!--prop=""-->
+          <!--label="是否就餐">-->
+          <!--<template slot-scope="scope">-->
+            <!--<span v-if="scope.row.ifHaveMeal === 0">否</span><span v-else>是</span>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+        <!--<el-table-column-->
+          <!--align="center"-->
+          <!--prop="mealGuestsCount"-->
+          <!--label="就餐人数">-->
+        <!--</el-table-column>-->
         <el-table-column
           align="center"
           prop="fieldName"
@@ -199,12 +199,22 @@
             },
             //通过审核
             approved(id){
-              this.$api.content.appointmentApprove({id:id})
-                .then(res => {
-                  if (res.success) {
-                    this.getDataList()
-                  }
-                })
+              this.$confirm('确定通过吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.$api.content.appointmentApprove({id:id})
+                  .then(res => {
+                    if (res.success) {
+                      this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                      });
+                      this.getDataList()
+                    }
+                  })
+              })
             },
             cancel(id){
               this.$api.content.appointmentCancel({id:id})

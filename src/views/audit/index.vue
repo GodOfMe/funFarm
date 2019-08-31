@@ -3,12 +3,12 @@
     <el-card class="filter-container" shadow="never">
       <el-form :inline="true" :model="searchFormData" size="small">
         <el-form-item label="手机号">
-          <el-input v-model="searchFormData.initiateTradeMemberPhone"></el-input>
+          <el-input v-model="searchFormData.memberPhone"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="searchFormData.status">
             <el-option label="全部" value=""></el-option>
-            <el-option v-for="item,i in statusList" :key="i" :label="item.key" :value="item.val"></el-option>
+            <el-option v-for="item,i in statusList1" :key="i" :label="item.key" :value="item.val"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -139,7 +139,8 @@
                     adminPhone: '',
                     farmId: ''
                 },
-                statusList: ['待审核','通过', '未通过','已打款']
+                statusList: ['待审核','通过','未通过','已打款'],
+              statusList1: [{key:'待审核',val:0},{key:'通过',val:1}, {key:'未通过',val:2},{key:'已打款',val:3}]
             }
         },
         created () {
@@ -153,7 +154,7 @@
             getDataList () {
                 var params = {}
                 Object.keys(this.searchFormData).forEach(key => {
-                    if (this.searchFormData[key] != '') {
+                    if (this.searchFormData[key] !== '') {
                         params[key] = this.searchFormData[key]
                     }
                 })

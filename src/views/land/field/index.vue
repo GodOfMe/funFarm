@@ -17,71 +17,69 @@
         <el-form-item>
           <el-button type="primary" @click="resetSearchFormData">重置</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="resetSearchFormData">添加</el-button>
+        </el-form-item>
       </el-form>
     
     </el-card>
     <div class="table-container">
       <el-table :data="tableData" border style="width: 100%" stripe>
         <el-table-column
-          prop="blockName"
+          prop="fieldNickname"
           align="center"
           label="田地昵称">
         </el-table-column>
         <el-table-column
-          prop="farmName"
+          prop="fieldName"
           align="center"
           label="田地名称">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="farmName"
           label="所属农场">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="blockName"
           label="所属地块">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="createTime"
           label="创建时间">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="rentStartTime"
           label="租地时间">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="rentEndTime"
           label="到期时间">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
-          label="所属农场">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="area"
+          prop="managerPhone"
           label="联系方式">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="manager"
           label="租地人">
         </el-table-column>
         <el-table-column
           align="center"
-          prop="area"
+          prop="statusName"
           label="状态">
         </el-table-column>
         <el-table-column
           align="center"
           label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click.native="openDia(scope.row)">详情</el-button>
+            <el-button type="text" @click.native="openDia(scope.row.id)">详情</el-button>
             <el-button type="text" @click.native="removeItem(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -236,7 +234,7 @@
                 // this.toggleDia(true)
               if (item) {
                 var params = JSON.stringify(item)
-                this.$router.push({path: 'fieldDetail', query: {params: params}})
+                this.$router.push({path: 'fieldDetail', query: {id: item}})
               } else {
                 this.$router.push({path: 'createPlan'})
               }

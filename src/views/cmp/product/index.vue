@@ -6,7 +6,7 @@
           <el-input v-model="searchFormData.phone"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
-          <el-input v-model="searchFormData.name"></el-input>
+          <el-input v-model="searchFormData.username"></el-input>
         </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="searchFormData.nickname"></el-input>
@@ -29,6 +29,7 @@
             v-model="dateRange"
             type="daterange"
             range-separator="至"
+            value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -107,7 +108,8 @@
           label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="openDia(scope.row)">修改</el-button>
-            <el-button type="text" @click="forbidItem(scope.row.id)">禁用</el-button>
+            <el-button v-if="scope.row.status === 1" type="text" @click="forbidItem(scope.row.id)">禁用</el-button>
+            <el-button v-else type="text">启用</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -151,7 +153,7 @@
                 dateRange: [],
                 searchFormData: {
                     phone: '',
-                    name: '',
+                    username: '',
                     nickname: '',
                     superiorLevelPhone: '',
                     withdrawCountLowerLimit: '',
@@ -174,7 +176,7 @@
                 },
                 statuList: [
                     {key: '禁用', val : 0},
-                    {key: '正常', val : 1}
+                    {key: '启用', val : 1}
                 ]
             }
         },
@@ -187,7 +189,9 @@
             },
             // 获取数据
             getData () {
-                var params = this.searchFormData
+                var params = this.searchFormData;
+                params.createTimeStart = this.dateRange[0]
+                params.createTimeEnd = this.dateRange[1]
                 console.log(this.$api)
                 this.$api.content.memberPage(params).then(res => {
                   this.tableData = res.data.list
@@ -202,6 +206,7 @@
             },
             // 弹框
             toggleDia (boolean) {
+              console.log(boolean);
                 this.diaParam.showDia = boolean
             },
             // 重置
@@ -235,8 +240,8 @@
                     this.$globalFun.res(res)
                     if (res.success) {
                         this.getData()
+                      this.toggleDia(false)
                     }
-                    this.toggleDia(false)
                 })
                 
             },

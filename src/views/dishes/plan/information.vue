@@ -7,16 +7,14 @@
       </el-form-item>
       <el-form-item label="">
         <div class="title">{{param.id?'最大产量500公斤':'最大产量'}};</div>
-        <div class="" style="border: 1px solid #000">
-          <el-row v-for="index in 3" :key="index">
-            <el-col class="content" :span="6" v-for="count in 4" :class="{active:month.val === 4*(index-1)+count}" :key="4*(index-1)+count" @click.native="getMonthPlan(4*(index-1)+count)">
-              <div class="grid-content bg-purple" style="text-align: center">{{4*(index-1)+count}}月</div>
-              <ul>
-                <li v-for="i in 4" :key="i">黄瓜（{{i}}）</li>
-              </ul>
-            </el-col>
-          </el-row>
-        </div>
+        <ul style="border: 1px solid #000;padding-left: 0">
+          <li style="width: 25%;box-sizing: border-box" class="content" v-for="count in 12" :class="{active:month.val === count}" :key="count" @click="getMonthPlan(count)">
+            <div class="grid-content bg-purple" style="text-align: center">{{count}}月</div>
+            <ul>
+              <li v-for="i in 4" :key="i">黄瓜（{{i}}）</li>
+            </ul>
+          </li>
+        </ul>
       </el-form-item>
       <el-form-item>
         <div class="grid-content bg-purple">{{month.key}}蔬菜：</div>
@@ -34,16 +32,14 @@
       </el-form-item>
       <el-form-item label="" v-if="isCreate">
         <div class="title">{{param.id?'最小产量500公斤':'最最小产量'}};</div>
-        <div class="" style="border: 1px solid #000">
-          <el-row v-for="index in 3" :key="index">
-            <el-col class="content" :span="6" v-for="count in 4" :class="{active:month.val === 4*(index-1)+count}" :key="4*(index-1)+count" @click.native="getMonthPlan(4*(index-1)+count)">
-              <div class="grid-content bg-purple" style="text-align: center">{{4*(index-1)+count}}月</div>
-              <ul>
-                <li v-for="i in 4" :key="i">黄瓜（{{i}}）</li>
-              </ul>
-            </el-col>
-          </el-row>
-        </div>
+        <ul style="border: 1px solid #000;padding-left: 0">
+          <li style="width: 25%;box-sizing: border-box" class="content" v-for="count in 12" :class="{active:month.val === count}" :key="count" @click="getMonthPlan(count)">
+            <div class="grid-content bg-purple" style="text-align: center">{{count}}月</div>
+            <ul>
+              <li v-for="i in 4" :key="i">黄瓜（{{i}}）</li>
+            </ul>
+          </li>
+        </ul>
       </el-form-item>
       <el-form-item style="text-align: center">
         <el-button type="primary" size="medium" @click="submitItem()">保存</el-button>
@@ -72,17 +68,7 @@
         img_home_order,
         param: {
           name: '',
-          nickname: '',
-          growthPeriodLowerLimit: '',
-          growthPeriodHigherLimit: '',
-          productYields: '',
-          description: '',
-          productCategoryId: '',
-          productCategoryName: '',
-          sowType: 1,
-          months: '',
-          startDate: '',
-          endDate: ''
+          monthList:[]
         },
         searchCateData: {
           name: '',
@@ -126,8 +112,12 @@
     },
     methods: {
       initData () {
-        this.getCurYear()
+        this.createArray()
         this.getParam()
+      },
+
+      createArray(){
+
       },
 
       getCurYear () {

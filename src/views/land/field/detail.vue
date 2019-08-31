@@ -2,20 +2,20 @@
   <div style="margin-top: 50px" id="editInfo">
     <el-form :model="param" ref="productInfoForm" label-width="10px" style="width: 1000px;padding: 10px">
       <el-form-item>
-        <label>种植计划：</label>
-        <span>绿色成林 （或自选计划）</span>
+        <!--<label>种植计划：</label>-->
+        <!--<span>绿色成林 （或自选计划）</span>-->
         <label>地名：</label>
-        <span>双溪1-1</span>
-        <el-button>停止种植</el-button>
+        <span>{{blockDetail.fieldName}}({{blockDetail.fieldNickname}})</span>
+        <!--<el-button>停止种植</el-button>-->
       </el-form-item>
       <el-form-item label="">
-        <div class="title">{{param.id?'最大产量500公斤':'最大产量'}};</div>
+        <div class="title">最大产量：（约{{blockDetail.totalEstimateOutput}}公斤）</div>
         <div class="" style="border: 1px solid #000">
           <el-row v-for="index in 3" :key="index">
-            <el-col class="content" :span="6" v-for="count in 4" :class="{active:month.val === 4*(index-1)+count}" :key="4*(index-1)+count" @click.native="getMonthPlan(4*(index-1)+count)">
+            <el-col class="content" :span="6" v-for="count in 4" :class="{active:blockDetail.currentMonth === 4*(index-1)+count}" :key="4*(index-1)+count" @click.native="getMonthPlan(4*(index-1)+count)">
               <div class="grid-content bg-purple" style="text-align: center">{{4*(index-1)+count}}月</div>
-              <ul>
-                <li v-for="i in 4" :key="i">黄瓜（{{i}}）</li>
+              <ul v-if="blockDetail.fieldPlanItemResultList&&blockDetail.fieldPlanItemResultList.length">
+                <li v-for="(item,i) in blockDetail.fieldPlanItemResultList[4*(index-1)+count-1].planItemProductRelationList">{{item.product.name}}</li>
               </ul>
             </el-col>
           </el-row>
@@ -35,7 +35,7 @@
       <el-form-item v-if="false">
         <el-button type="primary" size="medium" @click="createSmall()">生成最小产量</el-button>
       </el-form-item>
-      <el-form-item label="">
+      <el-form-item label="" v-if="false">
         <div class="title">{{param.id?'最小产量500公斤':'最最小产量'}};</div>
         <div class="" style="border: 1px solid #000">
           <el-row v-for="index in 3" :key="index">
@@ -49,38 +49,43 @@
         </div>
       </el-form-item>
       <el-form-item>
-        <div>实际种植 截止目前 15公斤：</div>
+        <div>实际种植 截止目前 {{blockDetail.totalFactOutput}}公斤：</div>
         <div class="table-container">
-          <el-table :data="tableData" border style="width: 100%" stripe>
+          <el-table :data="blockDetail.planItemProductHarvestDetailList" border style="width: 100%" stripe>
             <el-table-column
-              prop="farmName"
+              prop="sowingTime"
               align="center"
               label="播种时间">
             </el-table-column>
             <el-table-column
               align="center"
-              prop="createTimeStr"
-              label="采摘时间">
+              prop="pickingTime"
+              label="成熟时间">
             </el-table-column>
             <el-table-column
               align="center"
-              prop="totalArea"
+              prop="product"
               label="菜品">
             </el-table-column>
             <el-table-column
+              prop=""
               align="center"
               label="收获">
+              <template slot-scope="scope">
+                <span>{{scope.row.harvestOutput}}公斤</span>
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
-              prop="adminsName"
+              prop="deliveryTime"
               label="发货时间">
             </el-table-column>
             <el-table-column
               align="center"
               label="运送方式">
               <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
+                <span v-if="scope.row.deliveryType === 0">自配</span>
+                <el-button type="text" @click.native="sendProduct(scope.row.id)" v-else>发货</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -89,29 +94,49 @@
       <el-form-item>
         <div>当前田地状态：</div>
         <div class="table-container">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="blockDetail.currentMonthPlanItemProductHarvestDetailResult" style="width: 100%">
             <el-table-column
-              prop="farmName"
+              prop=""
               align="center"
               label="菜品">
+              <template slot-scope="scope">
+                <p v-if="scope.row.product.albumPics">
+                  <img v-if="index === 0" style="width: 50px;height: 50px" v-for="(item,index) in scope.row.product.albumPics.split(',')" :key="item" :src="'http://www.hzqxty.com/'+item" alt="">
+                  <span>{{scope.row.product.name}}</span>
+                </p>
+                <span v-else>{{scope.row.product.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
               label="状态">
               <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
+                <span v-if="scope.row.harvestStatus === 0">未种植</span><span v-if="scope.row.harvestStatus === 1">种植中</span><span v-if="scope.row.harvestStatus === 3">采摘中</span>
               </template>
             </el-table-column>
             <el-table-column
               align="center"
-              prop="totalArea"
+              prop=""
               label="预计产量">
+              <template slot-scope="scope">
+                <span>{{scope.row.relationResult.estimateOutput}}公斤</span>
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
               label="操作">
               <template slot-scope="scope">
-                <span v-if="scope.row.way === 0">自配</span><span v-else>采摘</span>
+                <p v-if="scope.row.harvestStatus === 0">
+                  <el-button type="text"  @click.native="farmBlockFieldSow(scope.row.productId)">播种</el-button>
+                </p>
+                <p v-if="scope.row.harvestStatus === 1">
+                  <el-button type="text"  @click.native="farmBlockFieldMature(scope.row.productId)">成熟了</el-button>
+                  <el-button type="text"  @click.native="startPick(scope.row.productId)">提醒采摘</el-button>
+                </p>
+                <p v-if="scope.row.harvestStatus === 3">
+                  <el-button type="text"  @click.native="nexts(scope.row.productId)">种下一个菜</el-button>
+                  <el-button type="text"  @click.native="jieshu(scope.row.productId)">结束种植</el-button>
+                </p>
               </template>
             </el-table-column>
           </el-table>
@@ -141,6 +166,7 @@
         month:{key: '一月', val: 1},
         img_home_order,
         tableData: [],
+        id:'',
         param: {
           // name: '',
           nickname: '',
@@ -183,7 +209,8 @@
         ],
         monthsSelected: ['', ''],
         dateRange: [],
-        curYear: ''
+        curYear: '',
+        blockDetail:{}
       }
     },
     created () {
@@ -205,8 +232,63 @@
         var date = new Date
         this.curYear = date.getFullYear()
       },
+      sendProduct(id){
+        this.$api.land.farmBlockFieldeliver({planItemProductRelationId:id}).then(res => {
+          console.log(res)
+          if (res.success) {
+
+          } else {
+
+          }
+
+        })
+      },
+      farmBlockFieldSow(id){
+        this.$api.land.farmBlockFieldSow({planItemProductRelationId:id}).then(res => {
+          console.log(res)
+          if (res.success) {
+
+          } else {
+
+          }
+
+        })
+      },
+      farmBlockFieldMature(id){
+        this.$api.land.farmBlockFieldMature({planItemProductRelationId:id}).then(res => {
+          console.log(res)
+          if (res.success) {
+
+          } else {
+
+          }
+
+        })
+      },
+      startPick(id){
+        this.$api.land.startPick({planItemProductRelationId:id}).then(res => {
+          console.log(res)
+          if (res.success) {
+
+          } else {
+
+          }
+
+        })
+      },
       getParam () {
-        console.log(this.value)
+        // console.log(this.value)
+        this.id = this.$route.query.id;
+        console.log(this.id)
+        this.$api.land.farmBlockDetail({id:this.id}).then(res => {
+          console.log(res)
+          if (res.success) {
+            this.blockDetail = res.data;
+          } else {
+
+          }
+
+        })
         var item = this.value
         this.param = {
           // name: item.name,
@@ -334,7 +416,7 @@
 
   .content {
     border: 1px solid #000;
-    min-height: 50px;
+    height: 130px;
     background: #eee;
   }
 
@@ -344,11 +426,13 @@
 
   ul {
     overflow: hidden;
+    padding-left: 0;
   }
   li {
     float: left;
     list-style: none;
-    width: 50%;
+    width: 100%;
+    text-align: center;
   }
   .vegetablesType {
     width: 150px;

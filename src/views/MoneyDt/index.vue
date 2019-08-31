@@ -31,32 +31,37 @@
       
       <el-table :data="tableData" border style="width: 100%" stripe>
         <el-table-column
-          prop="name"
+          prop="memberUsername"
           align="center"
           label="用户">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="memberPhone"
           align="center"
           label="手机号">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="operateTime"
           align="center"
           label="操作时间">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop=""
           align="center"
           label="类型">
+          <template slot-scope="scope">
+            <span v-if="scope.row.operateType === 0">支付租金</span>
+            <span v-if="scope.row.operateType === 1">体现</span>
+            <span v-if="scope.row.operateType === 2">奖励</span>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="amount"
           align="center"
           label="金额">
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="factAmount"
           align="center"
           label="实际金额">
         </el-table-column>
@@ -143,14 +148,12 @@
             getDataList () {
                 var params = {}
                 Object.keys(this.searchFormData).forEach(key => {
-                    if (this.searchFormData[key] != '') {
-                        params[key] = this.searchFormData[key]
-                    }
+                  params[key] = this.searchFormData[key]
                 })
                 this.$api.content.balancePage(params).then(res => {
                     if (res.success) {
-                        this.tableData = res.data.list
-                        this.totalCount = res.data.total
+                        this.tableData = res.data.commonPage.list
+                        this.totalCount = res.data.commonPage.total
                     } else {
                         this.tableData = []
                         this.totalCount = 0
