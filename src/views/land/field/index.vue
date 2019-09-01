@@ -17,9 +17,9 @@
         <el-form-item>
           <el-button type="primary" @click="resetSearchFormData">重置</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="openDia">添加</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-button type="primary" @click="openDia">添加</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     
     </el-card>
@@ -218,28 +218,27 @@
             },
             
             openDia (item) {
-              item = ''
-                this.resetDialogForm()
-                if (item) {
-                    this.dialogForm = {
-                        blockName: item.blockName,
-                        farmId: item.farmId,
-                        area: item.area,
-                        id: item.id
-                    }
-                    this.diaParam.farmName = item.farmName
-                    this.diaParam.title = '修改'
-                } else {
-                    this.diaParam.title = '添加'
-                }
-                this.toggleDia(true)
-              // this.$router.push({path: 'createPlan'})
-              // if (item) {
-              //   var params = JSON.stringify(item)
-              //   this.$router.push({path: 'fieldDetail', query: {id: item}})
-              // } else {
-              //   this.$router.push({path: 'createPlan'})
-              // }
+              // item = ''
+              //   this.resetDialogForm()
+              //   if (item) {
+              //       this.dialogForm = {
+              //           blockName: item.blockName,
+              //           farmId: item.farmId,
+              //           area: item.area,
+              //           id: item.id
+              //       }
+              //       this.diaParam.farmName = item.farmName
+              //       this.diaParam.title = '修改'
+              //   } else {
+              //       this.diaParam.title = '添加'
+              //   }
+              //   this.toggleDia(true)
+              if (item) {
+                var params = JSON.stringify(item)
+                this.$router.push({path: 'fieldDetail', query: {id: item}})
+              } else {
+                this.$router.push({path: 'createPlan'})
+              }
             },
             // 弹框
             toggleDia (boolean) {
